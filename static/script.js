@@ -1,8 +1,8 @@
   var rf,sb;
   $(document).ready(function(){
+    
     refundata()
     mydata()
-    viewchart(2020)
     $('#year-month').hide()
     $('#subcategry').hide()
     $('#cattable').DataTable();
@@ -48,7 +48,7 @@
         }
         $('#monthselect').append(monthlist);
       // select Month List  end
-   
+      viewchart(2020)
   });
   function viewchart(e){
     var dates = [];
