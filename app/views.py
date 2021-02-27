@@ -333,10 +333,15 @@ class chartView(View):
         year=request.GET.get('year',2020)
         print("My year ",year)
         mydata=list()
-        data=items.objects.annotate(month=TruncMonth('Date')).filter(Date__year=year,uid=request.session['user']).values('month').annotate(total_income=Sum('Amount')).order_by('Date__month').order_by()
+        data=items.objects.annotate(month=TruncMonth('Date')).filter(Date__year=year,uid=request.session['user']).values('month').annotate(total_income=Sum('Amount')).order_by('Date__month')
+        # print(type(data))
         for x in data:
+            y=f"{x['month'].year}-{x['month'].strftime('%b')}"
+           
             mydata.append({
-                'date':str(x['month']),
+               
+                
+                'date':str(y),
                 'amount':round(x['total_income'],2)
             })  
        
