@@ -1,0 +1,432 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block body %}
+<style>
+  .form-group label{
+    font-size:14px;
+    margin:0;
+    padding:0;
+  }
+  .form-group input{
+   color:#000;
+  }
+  .form-group input:focus{
+   color:#000;
+  }
+</style>
+<div class="content">
+  <div class="row">
+    
+    <div class="col-12">
+      {% for message in messages %}
+        <div class="alert alert-{{message.tags}} mb-0 alert-dismissible fade show" role="alert">
+            <strong></strong> {{message}}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        {% endfor %}
+      <div class="card card-chart text-right">
+        <div class="card-header">
+          <div class="row">
+          <div class="col-md-4 "  style="margin: 0 auto ">
+        <select style="background-color:#1E1E2E; color:#fff;" name="year" class="form-control" id="year" onchange="viewchart(this.options[this.selectedIndex].value)">
+          <option value="">Select Year</option>
+
+        </select>
+      
+      </div>
+     <div class="col-md-4">
+      <button class="btn btn-primary"  data-toggle="modal" data-target="#additem">Add Item</button>
+     </div>
+    </div>
+        </div>
+        <div class="card-body">
+          <div class="chart-area"  >
+            <canvas id="chartBig1"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- table start -->
+    <div class="col-md-12">
+      <div class="card ">
+        <div class="card-header">
+          <h4 class="card-title"> All Data
+            <div class=" col-md-7 float-right">
+              <div class="row">
+                <div class="col-md-3">
+                  <button type="button" class="btn btn-primary float-right " style="display:none;" id="delbtn" >Delete </button>
+                </div>
+             <div class="col-md-3">
+            <select class="form-control bg-dark float-left" id="yearselect">
+              <option value="">Select Year</option>
+            </select>
+          </div>
+          <div class="col-md-3">
+            <select class="form-control bg-dark" id="monthselect">
+             <option value="">Select Month</option>
+            </select>
+          </div>
+          <div class="col-md-3">
+            <input type="text" class="form-control" id="search" placeholder="Search...">
+          </div>
+         
+          </div>
+        </div>
+      
+          </h4>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table tablesorter " id="userdata">
+              <thead class=" text-primary">
+
+
+
+
+
+
+                <tr>
+                  <th><input class="form-check-input " id="alldelbox" type="checkbox"   style="width: 54px;
+                    height: 20px; margin-top: -12px; "></th>
+                  
+                  <th>
+                    Doing Business As
+                  </th>
+                  <th>
+                    Description
+                  </th>
+                  <th>
+                     City
+                  </th>
+                  <th>
+                    Street Address
+                  </th>
+                  <th class="text-center">
+                    Amount
+                  </th>
+                  <th class="text-center">
+                    Date
+                    </th>
+                  <th class="text-center">
+                  Action
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for data in data %}
+                <tr>
+                  <td>
+                    <input type="checkbox" class="form-check-input delbox"  name="deldatabox" value="{{data.pk}}"  style="width: 54px;
+                    height: 20px; margin-top: -12px; ">
+                  </td>
+                  <td>
+                    
+                   {{data.DoingBusinessAs}}
+                  </td>
+                  <td>
+                    {{data.Description}}
+                  </td>
+                  <td>
+                   {{data.City}}
+                  </td>
+                  <td class="text-center">
+                   {{data.StreetAddress}}
+                  </td>
+                  <td class="text-center">
+                   {{data.Amount}}
+                  </td>
+                  <td class="text-center">
+                   {{data.Date}}
+                  </td>
+                  <td>
+                    <a href="itemdelete/{{data.id}}" class="btn btn-info">
+                 <i class=" tim-icons icon-trash-simple"></i>
+                  </a>
+                   </td>
+                </tr>
+                {% endfor %}
+              
+              
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- table end -->
+  </div>
+ 
+</div>
+<div class="modal fade" id="additem" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Add Item</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+       <form action="additem" method="POST">
+         {% csrf_token %}
+       <div class="form-group">
+           <label >Text</label>
+           <input class="form-control" type="text" name="itemname" placeholder="Enter Item Name" required>
+         </div>
+       <div class="form-group">
+           <label >Description</label>
+           <input class="form-control" type="text" name="itemdesc" placeholder="Enter Item Description" required>
+         </div>
+       <div class="form-group">
+           <label >Doing Business As</label>
+           <input class="form-control" type="text" name="itemDoingBusinessAs" placeholder="Enter  Doing Business As" required>
+         </div>
+       <div class="form-group">
+           <label >Street Address</label>
+           <input class="form-control" type="text" name="StreetAddress" placeholder="Enter  Street Address" required>
+         </div>
+       <div class="form-group">
+           <label >City</label>
+           <input class="form-control" type="text" name="city" placeholder="Enter City" required>
+         </div>
+       <div class="form-group">
+           <label >Amount</label>
+           <input class="form-control" type="number" name="amount" placeholder="Enter Amount" required>
+         </div>
+       <div class="form-group">
+           <label >Date</label>
+           <input class="form-control" type="date" name="date" placeholder="Enter Amount" required>
+         </div>
+       
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </form>
+  </div>
+</div>
+{% block script %}
+<script>
+  document.getElementById('delbtn').onclick = function(){
+    var  deldata = new Array();
+    var selectdata=document.getElementsByClassName('delbox');
+    for(x=0;x<selectdata.length;x++){
+      if(selectdata[x].checked){
+        deldata.push(selectdata[x].value)
+      }
+    
+    }
+    $.ajax({
+      url:'deleteallitem',
+      type:'POST',
+      data:{
+        ids:deldata,
+       
+      },
+      
+      success:function(data){
+        location.reload();
+
+      }
+    })
+  }
+ 
+  $(document).ready(function(){ 
+    
+    $('#userdata').DataTable(
+      {
+   
+    fixedHeader:    true,
+   
+    scrollResize:     true,
+   
+    searching:        false,
+    paging:           false,
+    fixedColumns: {
+        leftColumns: 1,
+        rightColumns: 1
+    },
+    order: [[ 1, 'asc' ]]
+}
+    );
+   
+   
+  });
+    $('#userdata').addClass('table')
+    $('#userdata').addClass('tablesorter');
+
+  // check all box for delete code start
+  $('#alldelbox').click(function(){
+    if ($(this).is(':checked')){
+    $(".delbox").attr("checked", "checked");
+    $("#delbtn").show();
+    }
+else{
+
+    $(".delbox").removeAttr("checked");
+    $("#delbtn").hide();
+}
+  })
+  $('.delbox').click(function(){
+    
+    if ($(this).is(':checked')){
+   
+    $("#delbtn").show();
+    }
+else{
+
+
+}
+  })
+ 
+  $(document).ready(function(){
+    viewchart(2020)
+    let d= new Date();
+    let date= d.getFullYear();
+    var years;
+    for(x=date; x>=2015;x--){
+       years+=`<option value="${x}">${x}</option>`;
+    }
+    $('#year').append(years)
+    //chart data form backhand start
+    var dates = [];
+    var amounts = [];
+    $.ajax({
+      url:'chartview',
+      type:'GET',
+      data:{year:d.getFullYear()},
+      success:function(data){
+      let datas=eval(data)
+      for(x=0;x<datas.length;x++){
+       dates.push(datas[x].date);
+       amounts.push(datas[x].amount);
+      }
+      mychart(dates,amounts);
+      datas=[];
+      amounts=[];
+    }
+      });
+    //chart data form backhand end
+    var table= $('#userdata').DataTable();
+    var yearlist;
+    var monthlist;
+    //Month Names
+    const monthNames = ["Jan", "Feb", "Mar", "April", "May", "June",
+  "July", "Aug", "Sep", "Oct", "Nov", "Dec"
+];
+    //Year show in slect box start code 
+     for(x=date;x>=2015;x--){
+     yearlist+=`<option value="${x}">${x}</option>`;
+     }
+     $('#yearselect').append(yearlist)
+    //Year show in slect box start end
+    for(x=0;x<12;x++){
+      monthlist+=`<option value="${monthNames[x]}">${monthNames[x]}</option>`;
+      }
+      $('#monthselect').append(monthlist);
+    // select Month List  end
+    var myyear;
+    $('#yearselect').on( 'change', function () {
+      myyear=this.value;
+      table
+          .columns( 6 )
+          .search( this.value )
+          .draw();
+  } );
+    $('#monthselect').on( 'change', function () {
+    
+      table
+          .columns( 6 )
+          .search( this.value , myyear)
+          .draw();
+  } );
+  $('#search').keyup(function(){
+    table.search($(this).val()).draw() ;
+}) 
+ 
+  });
+  function viewchart(e){
+    var dates = [];
+    var amounts = [];
+    $.ajax({
+      url:'chartview',
+      type:'GET',
+      data:{year:e},
+      success:function(data){
+      let datas=eval(data)
+      for(x=0;x<datas.length;x++){
+       dates.push(datas[x].date);
+       amounts.push(datas[x].amount);
+      }
+      mychart(dates,amounts);
+       datas=[];
+       amounts=[];
+    }
+      });
+  }
+  function mychart(dates,amounts){
+  
+  var ctx = document.getElementById('chartBig1').getContext('2d');
+  var myChart = new Chart(ctx, {
+      type: 'line',
+
+      data: {
+          labels:dates,
+          datasets: [{
+              label: 'Monthly spends',
+              data:amounts,
+              backgroundColor: [
+                  'rgba(255, 99, 132, 0.2)',
+                  'rgba(54, 162, 235, 0.2)',
+                  'rgba(255, 206, 86, 0.2)',
+                  'rgba(75, 192, 192, 0.2)',
+                  'rgba(153, 102, 255, 0.2)',
+                  'rgba(255, 159, 64, 0.2)'
+              ],
+              borderColor: [
+                  'rgba(255, 99, 132, 1)',
+                  'rgba(54, 162, 235, 1)',
+                  'rgba(255, 206, 86, 1)',
+                  'rgba(75, 192, 192, 1)',
+                  'rgba(153, 102, 255, 1)',
+                  'rgba(255, 159, 64, 1)'
+              ],
+              borderWidth: 1,
+             
+          }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+          scales: {
+              yAxes: [{
+                  ticks: {
+                      beginAtZero: true
+                  }
+                  
+              }]
+          }
+      }
+  });
+  }
+  function mydata(){
+    $.ajax({
+      url:'chartview',
+      type:'GET',
+      success:function(data){
+      let datas=eval(data)
+      for(x=0;x<datas.length;x++){
+         
+      }
+      }
+    })
+  }
+
+  </script> 
+{% endblock script %}
+  
+{% endblock body %}

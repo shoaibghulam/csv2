@@ -1,0 +1,282 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block body %}
+<div class="content">
+  <div class="row">
+  
+    <!-- table start -->
+    <div class="col-md-12">
+        {% for message in messages %}
+        <div class="alert alert-{{message.tags}} mb-0 alert-dismissible fade show" role="alert">
+            <strong></strong> {{message}}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <button type="button" class="insert" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        {% endfor %}
+      <div class="card ">
+        <div class="card-header">
+          <h4 class="card-title"> Sub Category
+            <button type="button" class="btn btn-primary float-right " style="display:none; position: absolute;     top: 15px;
+            right: 225px;" id="delbtn" >Delete </button> 
+            <button type="button" class="btn btn-primary float-right " data-toggle="modal" data-target="#insertmodal">
+  Insert
+</button>
+          </h4>
+         
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table tablesorter " id="userdata">
+              <thead class=" text-primary">
+              <tr>
+                 <th><input class="form-check-input " id="alldelbox" type="checkbox"   style="width: 54px;
+                    height: 20px; margin-top: -12px; "></th>
+              
+                  <th>
+                    Sub Category
+                  </th>
+                 <th>
+                    Category
+                  </th>
+               
+                  <th class="text-center">
+                  Action
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for data in data %}
+                <tr>
+                  <td>
+                       <input type="checkbox" class="form-check-input delbox"  name="deldatabox" value="{{data.pk}}"  style="width: 54px;
+                    height: 20px; margin-top: -12px; ">
+                  </td>
+                  <td class="text-center">
+                   {{data.SName}}
+                  </td>
+                 
+                  <td >
+                   {{data.catid}}
+                  </td>
+                  <td  class="text-center" >
+                    <button  class="btn btn-primary"  data-toggle="modal" data-target="#exampleModal" onclick="getdata({{data.sid}})">
+                 <i class=" tim-icons icon-pencil"></i>
+                    </button>
+                   
+                    <a href="/subcatdelete/{{data.sid}}" class="btn btn-dark">
+                 <i class=" tim-icons icon-trash-simple"></i>
+                  </a>
+                   </td>
+                </tr>
+                {% endfor %}
+              
+              
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- table end -->
+  </div>
+ 
+</div>
+<!-- Modal -->
+<div class="modal fade" style="background-color:#27293d59; color:#fff;" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog"  role="document">
+      <div class="modal-content">
+        <div class="modal-header text-light" >
+          <h5 class="modal-title" id="exampleModalLabel">Update Sub Category</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+         <form action="{% url 'subcatupdate' %}" method="POST">
+             {% csrf_token %}
+             <input type="hidden" name="uid" id="cid">
+            <select name="cat" id="cat" class="form-control" style="background-color:#1a1e4e; color:#fff;"required>
+                <option value="">Select Category</option>
+                {% for cat in cat  %}
+                <option value="{{cat.catid}}">{{cat.catName}}</option>
+                {% endfor %}
+            </select>
+            <br>
+            <input type="text" id="sname" name="sname" class="form-control" placeholder="Enter Sub Categry Name" style="background-color:#13163d; color:#fff;"  required>
+      
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Save changes</button>
+        </form>
+        </div>
+      </div>
+    </div>
+  </div>
+<!-- Modal -->
+<div class="modal fade" style="background-color:#27293d59; color:#fff;" id="insertmodal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog"  role="document">
+      <div class="modal-content">
+        <div class="modal-header text-light" >
+          <h5 class="modal-title" id="exampleModalLabel">Insert Sub Category</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+         <form action="{% url 'insertsubcatdata' %}" method="POST">
+             {% csrf_token %}
+            
+            <select name="cat" class="form-control" style="background-color:#1a1e4e; color:#fff;"required>
+                <option value="">Select Category</option>
+                {% for cat in cat  %}
+                <option value="{{cat.catid}}">{{cat.catName}}</option>
+                {% endfor %}
+            </select>
+            <br>
+            <input type="text"  name="sname" class="form-control" placeholder="Enter Sub Categry Name" style="background-color:#13163d; color:#fff;"  required>
+      
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Save changes</button>
+        </form>
+        </div>
+      </div>
+    </div>
+  </div>
+{% block script %}
+<script>
+  document.getElementById('delbtn').onclick = function(){
+    var  deldata = new Array();
+    var selectdata=document.getElementsByClassName('delbox');
+    for(x=0;x<selectdata.length;x++){
+      if(selectdata[x].checked){
+        deldata.push(selectdata[x].value)
+      }
+    
+    }
+    $.ajax({
+      url:'deleteallsubcat',
+      type:'POST',
+      data:{
+        ids:deldata,
+       
+      },
+      
+      success:function(data){
+        location.reload();
+
+      }
+    })
+  }
+ // check all box for delete code start
+ 
+  // check all box for delete code start
+ // check all box for delete code start
+  $('#alldelbox').click(function(){
+    if ($(this).is(':checked')){
+    $(".delbox").attr("checked", "checked");
+    $("#delbtn").show();
+    }
+else{
+
+    $(".delbox").removeAttr("checked");
+    $("#delbtn").hide();
+}
+  })
+  $('.delbox').click(function(){
+    
+    if ($(this).is(':checked')){
+   
+    $("#delbtn").show();
+    }
+else{
+
+
+}
+  })
+ 
+  $(document).ready(function(){
+    $('#userdata').DataTable( {
+   
+    fixedHeader:    true,
+   
+    scrollResize:     true,
+   
+    searching:        false,
+    paging:           false,
+    fixedColumns: {
+        leftColumns: 1,
+        rightColumns: 1
+    },
+    order: [[ 1, 'asc' ]]
+});
+    $('#userdata').addClass('table')
+    $('#userdata').addClass('tablesorter');
+  })
+  function getdata(e){
+    
+     
+      $.ajax({
+          url:'{% url 'subcatupdate' %}',
+          type:'GET',
+          data:{
+
+              id:e
+          },
+          success:function(data){
+               let datas = JSON.parse(data)
+              
+              $('#cid').val(datas.sid)
+              $('#cat').val(datas.catid)
+              $('#sname').val(datas.SName)
+          }
+      })
+  }
+  var ctx = document.getElementById('chartBig1').getContext('2d');
+  var myChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+          labels: ['Amazon', 'Netflix', 'Yellow', 'Ali baba', 'yahoo baba', 'orange'],
+          datasets: [{
+              label: 'Monthly spends',
+              data: [40, 19, 3, 5, 2, 3],
+              backgroundColor: [
+                  'rgba(255, 99, 132, 0.2)',
+                  'rgba(54, 162, 235, 0.2)',
+                  'rgba(255, 206, 86, 0.2)',
+                  'rgba(75, 192, 192, 0.2)',
+                  'rgba(153, 102, 255, 0.2)',
+                  'rgba(255, 159, 64, 0.2)'
+              ],
+              borderColor: [
+                  'rgba(255, 99, 132, 1)',
+                  'rgba(54, 162, 235, 1)',
+                  'rgba(255, 206, 86, 1)',
+                  'rgba(75, 192, 192, 1)',
+                  'rgba(153, 102, 255, 1)',
+                  'rgba(255, 159, 64, 1)'
+              ],
+              borderWidth: 1
+          }]
+      },
+      options: {
+          scales: {
+              yAxes: [{
+                  ticks: {
+                      beginAtZero: true
+                  }
+              }]
+          }
+      }
+  });
+  
+  </script> 
+{% endblock script %}
+  
+{% endblock body %}

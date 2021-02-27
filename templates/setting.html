@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block body %}
+<div class="content">
+  <div class="row">
+  <div class="col-md-5" style="margin: auto;">
+    {% for message in messages %}
+        <div class="alert alert-{{message.tags}} mb-0 alert-dismissible fade show" role="alert">
+            <strong></strong> {{message}}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        {% endfor %}
+      <form action="{% url 'setting' %}" method="post">
+        {% csrf_token %}
+          <label>First Name</label>
+          <input type="text" name="fname" class="form-control" placeholder="Enter First Name" value="{{data.firstName}}" required>
+          <label>Last Name</label>
+          <input type="text" name="lname" class="form-control"  placeholder="Enter Last Name" value="{{data.lastName}}" required>
+          <label>Email</label>
+          <input type="email" name="email" class="form-control" placeholder="Enter Email Address"value="{{data.email}}" required>
+          <label>Contact</label>
+          <input type="text" name="contact" class="form-control" placeholder="Enter Contact no" value="{{data.contactNo}}" required>
+          <label>Password</label>
+          <input type="password" name="password" class="form-control" placeholder="Enter Password" value="{{data.password}}" required>
+          <br> <br>
+          <div class="text-center">
+            <input type="submit" value="Update" class="btn btn-primary">
+          </div>
+        
+      </form>
+  </div>
+</div>
+</div>  
+{% endblock body %}
