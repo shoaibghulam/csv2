@@ -215,7 +215,7 @@ def insertsubcatdata(request):
     if request.method == "POST":
         cat=request.POST['cat']
         sname=request.POST['sname']
-        data=subCategory(SName=sname,catid=cat)
+        data=subCategory(SName=sname,catid=category.objects.get(pk=cat))
         data.save()
         messages.success(request,'Sub Category has been Inserted')
         return redirect('/insertsubcat')
