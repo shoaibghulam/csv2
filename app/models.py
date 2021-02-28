@@ -25,7 +25,7 @@ class category(models.Model):
 class subCategory(models.Model):
     sid=models.AutoField(primary_key=True)
     SName=models.CharField(max_length=200)
-    catid=models.ForeignKey(category,  on_delete=models.SET_NULL , blank=True,null=True)
+    catid=models.ForeignKey(category,  on_delete=models.SET_NULL , null=True)
     # uid=models.ForeignKey(Users,  on_delete=models.SET_NULL , blank=True,null=True)
     
     def __str__(self):
