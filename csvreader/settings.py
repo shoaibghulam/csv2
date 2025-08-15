@@ -53,7 +53,6 @@ MIDDLEWARE = [
     'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
-
 ROOT_URLCONF = 'csvreader.urls'
 
 TEMPLATES = [
