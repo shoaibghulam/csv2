@@ -78,15 +78,15 @@ DATA_UPLOAD_MAX_NUMBER_FIELDS = 1024000
 
 DATABASES = {
     'default': {
-        # 'ENGINE': 'django.db.backends.sqlite3',
-        # 'NAME': BASE_DIR / 'db.sqlite3',
-        'ENGINE': 'django.db.backends.postgresql',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+        #'ENGINE': 'django.db.backends.postgresql',
         # 'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-        'NAME': 'csv',
-        'USER': 'postgres',
-        'PASSWORD': 'admin',
-        'HOST': '127.0.0.1',
-        'PORT': '5432'
+        #'NAME': 'csv',
+        #'USER': 'postgres',
+        #'PASSWORD': 'admin',
+        #'HOST': '127.0.0.1',
+        #'PORT': '5432'
     }
 }
 
