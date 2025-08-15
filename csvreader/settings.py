@@ -27,7 +27,7 @@ SECRET_KEY = '^y)sy0q6@7#%s)sq$pu5p3w8#&)gyra*hymbq_!gkt_2aabi5w'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['alphatesters.herokuapp.com','localhost']
+ALLOWED_HOSTS = ['https://csv2-production.up.railway.app/','csv2-production.up.railway.app','localhost']
 
 
 # Application definition
